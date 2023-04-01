@@ -25,6 +25,6 @@ if response.status_code == 200: # Call successful
     filtered_data = [row for row in data if time_str_formatted_lower <= row['timestamp'] <= time_str_formatted_upper] # Date filtration
     
     print(filtered_data)
-    print(f"\nFiltered {len(filtered_data)} total {STOCK_NAME} stock data between {time_str_lower} - {time_str_upper}.")
+    print(f"\nFiltered {len(filtered_data)}/{len(data)} total '{STOCK_NAME}' stock data between {time_str_lower} - {time_str_upper}.")
 else: # Call unsuccessful
     print(f'Request failed with status code {response.status_code}')
