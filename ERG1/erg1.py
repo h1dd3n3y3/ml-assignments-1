@@ -4,11 +4,11 @@ from datetime import datetime
 API_KEY = 'AFG1UCT1UGMCYXJ8'
 
 time_str_lower = '01/03/2022' # Desired starting date
-time_obj_lower = datetime.strptime(time_str_lower, '%d/%m/%Y')
+time_obj_lower = datetime.strptime(time_str_lower, '%d/%m/%Y') # Assign time to datetime object
 time_str_formatted_lower = time_obj_lower.strftime('%Y-%m-%d') # Alpha Vantage timestamp pattern standard conversion
 
 time_str_upper = '01/10/2022' # Desired ending date
-time_obj_upper = datetime.strptime(time_str_upper, '%d/%m/%Y')
+time_obj_upper = datetime.strptime(time_str_upper, '%d/%m/%Y') # Assign time to datetime object
 time_str_formatted_upper = time_obj_upper.strftime('%Y-%m-%d') # Alpha Vantage timestamp pattern standard conversion
 
 STOCK_NAME = 'AAPL' # Apple stock name
@@ -20,7 +20,7 @@ response = requests.get(history_url) # API call
 if response.status_code == 200: # Call successful
     content = response.content.decode('utf-8') # Response content decoding
     reader = csv.DictReader(content.splitlines()) # Read the csv
-    
+
     data = [row for row in reader] # Save it in a list
     filtered_data = [ # Date filtration
         row for row in data if time_str_formatted_lower <= row['timestamp'] <= time_str_formatted_upper
