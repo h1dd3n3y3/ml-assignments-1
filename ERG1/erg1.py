@@ -18,15 +18,13 @@ history_url = f'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_A
 response = requests.get(history_url) # API call
 
 if response.status_code == 200: # Call successful
-    content = response.content.decode('utf-8') # Response content decoding
+    content = response.content.decode('utf-8') # Decode API response content
     reader = csv.DictReader(content.splitlines()) # Read the csv
 
-    data = [row for row in reader] # Save it in a list
-    filtered_data = [ # Date filtration
-        row for row in data if time_str_formatted_lower <= row['timestamp'] <= time_str_formatted_upper
-    ]
+    data = [row for row in reader] # Save all stocks in a list
+    filtered_data = [row for row in data if time_str_formatted_lower <= row['timestamp'] <= time_str_formatted_upper] # Stock date filtration
     
-    print("Filtered stock data:", filtered_data, sep="\n\n", end="\n\n")
+    print(filtered_data, end="\n\n")
     print(f"Filtered {len(filtered_data)}/{len(data)} total '{STOCK_NAME}' stock data between {time_str_lower} - {time_str_upper}.")
 else: # Call unsuccessful
     print(f'Request failed with status code {response.status_code}')
