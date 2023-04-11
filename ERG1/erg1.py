@@ -22,14 +22,14 @@ if response.status_code == 200: # Call successful
     content = response.content.decode('utf-8') # Decode API response content
     reader = csv.DictReader(content.splitlines()) # Read the csv
 
-    data = [row for row in reader] # Save all stocks in a list
+    data = [row for row in reader] # Save all stock data in a list
     filtered_data = [row for row in data if time_str_formatted_lower <= row['timestamp'] <= time_str_formatted_upper] # Stock date filtration
 
-    with open("./filtered_stocks.csv", "w", newline='') as stocks: # Now save the request as a file
+    with open("./filtered_stock.csv", "w", newline='') as stock: # Save the filtered stock data in a local csv file
         fieldnames = ['timestamp', 'open', 'high', 'low', 'close', 'adjusted close', 'volume', 'dividend amount']
-        writer = csv.DictWriter(stocks, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(filtered_data)
+        writer = csv.DictWriter(stock, fieldnames=fieldnames) # Write to csv
+        writer.writeheader() # 1st row will contain the 'fieldnames'
+        writer.writerows(filtered_data) # Write the filtered list data accordingly
     
     print(filtered_data, end="\n\n")
     print(f"Filtered {len(filtered_data)}/{len(data)} total '{STOCK_NAME}' stock data between {time_str_lower} - {time_str_upper}.")
