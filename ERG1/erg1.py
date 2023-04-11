@@ -1,4 +1,5 @@
 import requests, csv
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 API_KEY = 'AFG1UCT1UGMCYXJ8'
@@ -23,6 +24,9 @@ if response.status_code == 200: # Call successful
 
     data = [row for row in reader] # Save all stocks in a list
     filtered_data = [row for row in data if time_str_formatted_lower <= row['timestamp'] <= time_str_formatted_upper] # Stock date filtration
+
+    with open("./filtered_stocks.csv", "wb") as stocks: # Now save the request as a file
+        stocks.write(response.content)
     
     print(filtered_data, end="\n\n")
     print(f"Filtered {len(filtered_data)}/{len(data)} total '{STOCK_NAME}' stock data between {time_str_lower} - {time_str_upper}.")
