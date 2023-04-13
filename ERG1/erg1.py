@@ -46,7 +46,7 @@ if response.status_code == 200: # Call successful
 
     # Set labels and title
     ax.set_xlabel('Time')
-    ax.set_ylabel('Stock Value')
+    ax.set_ylabel(f'{STOCK_NAME} Stock Value')
     ax.set_title('Stock High and Low Values over Time')
 
     plt.xticks(rotation=20) # Rotate x-axis labels for better visibility
