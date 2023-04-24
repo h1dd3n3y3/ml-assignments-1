@@ -1,0 +1,10 @@
+The dataset is licensed under the Creative Commons License 4.0 (Attribution)
+
+The author is Kiattisak Rattanaporn
+
+Their Kaggle profile: https://www.kaggle.com/rkiattisak
+
+The dataset:
+https://www.kaggle.com/datasets/rkiattisak/traveler-trip-data
+
+The dataset has been modified to help the assignment
