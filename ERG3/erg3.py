@@ -11,7 +11,7 @@ print(df)
 # Προσθέτουμε τη μοναδική μεταβλητή
 for index, row in df.iterrows():
     df.at[index, 'name'] = 'Student ' + str(index)
-
+#aaaa
 # Categorising the students into 4 classes 
 class_Fail = {}
 class_Fair = {}
