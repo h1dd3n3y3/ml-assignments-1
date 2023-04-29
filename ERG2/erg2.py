@@ -25,9 +25,23 @@ def safe_csv_read(csvstring):            #from python docs: https://docs.python.
 
 def manhatan_distance(point1_x,point1_y,point2_x,point2_y):   # eucledian distance is harder to compute
     return np.abs(point1_x-point2_x) + np.abs(point1_y-point2_y)
+
+def find_closest_point(arr,point):
+    output=[]
+    for i in arr:
+        output.append(manhatan_distance(i[0],point[0],i[1],point[1]))
+    return np.argmin(output)
+
+
+# def make_colors(pairs):
     
-# def makelabels(pairs):
-    
+def make_groups(data,points):
+    output=[]
+    for i in data:
+        tmp=[]
+        for j in points:
+            tmp.append(data[point])
+    return output
 
 data=safe_csv_read('source.csv')
 data.pop(0)
@@ -38,10 +52,18 @@ data.pop(0)
 #print(data[0][0])
 x=[]
 y=[]
-
 for i in data:
     x.append(i[4])
     y.append(i[12])
 plt.scatter(x,y)
+
+
+x=[]
+y=[]
+for i in data:
+    x.append(i[4])
+    y.append(i[12])
+plt.scatter(x,y)
+
 # plt.scatter(y)
 plt.show()
