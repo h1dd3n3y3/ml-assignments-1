@@ -1,10 +1,10 @@
-import requests, csv, numpy as np, matplotlib.pyplot as plt, os
+import requests, csv, numpy as np, matplotlib.pyplot as plt, os, platform
 from datetime import datetime
 
 def calc_regression_coef(x, y):
     n = np.size(x) # Number of observations/points
 
-    # Mean of x and y vector
+    # Mean of x and y vectors
     m_x = np.mean(x)
     m_y = np.mean(y)
 
@@ -24,15 +24,10 @@ def plot_regression_line(x, y, b):
     plt.plot(x, y_pred, color="g") # Plotting the regression line
 
     # Putting labels
-    plt.xlabel('Month lapse')
+    plt.xlabel('Month numeral')
     plt.ylabel(f'{STOCK_NAME} Stock value')
 
     plt.show() # Show plot
-
-def alpha_vantage_date_format_convertion(d_m_y_format):
-    date_obj = datetime.strptime(d_m_y_format, '%d/%m/%Y') # Assign time to datetime object
-
-    return date_obj.strftime('%Y-%m-%d'), d_m_y_format # Alpha Vantage timestamp pattern conversion
 
 def stock_prediction_formula(b_0, b_1, x_i):
     return round(b_0 + b_1 * x_i, 2) # 2 decimal digit limitation
@@ -42,13 +37,43 @@ STOCK_NAME = 'AAPL' # Apple stock name
 DATASET_URL = f'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol={STOCK_NAME}&apikey={API_KEY}&datatype=csv' # Alpha Vantage monthly adjusted url
 
 # Desired date limits for the data set (old data)
-date_lower_0 = alpha_vantage_date_format_convertion('01/01/2020') # Starting date
-date_upper_0 = alpha_vantage_date_format_convertion('01/01/2021') # Ending date
+date_lower_0 = "2020-01-01" # Starting date
+date_upper_0 = "2021-01-01" # Ending date
 
 while 1:
+    os.system("cls" if platform.system() == "Windows" else "clear") # Clear windows terminal content
+    print(f"Data set dates: {date_lower_0} - {date_upper_0}")
+
     # Desired date limits for future prediction (currently present)
-    date_lower_1 = alpha_vantage_date_format_convertion("01/11/2022") # Starting date >= past ending date
-    date_upper_1 = alpha_vantage_date_format_convertion("01/04/2023") # Ending date <= 1 month before the current program execution month
+    while 1:
+        date_lower_1 = input("Enter a prediction starting date (in YYYY-MM-DD format): ") # Starting date >= past ending date
+
+        try:
+            datetime.strptime(date_lower_1, "%Y-%m-%d") # Strict API date format
+        except ValueError:
+            os.system("cls" if platform.system() == "Windows" else "clear") # Clear windows terminal content
+            print("Wrong date format! Please try again:")
+            continue
+
+        if date_lower_1 > date_upper_0:
+            break
+        else:
+            print(f"Date unacceptable: {date_lower_1} <= {date_upper_0}")
+
+    while 1:
+        date_upper_1 = input("Enter a prediction ending date (in YYYY-MM-DD format): ") # Ending date <= 1 month before the current program execution month
+
+        try:
+            datetime.strptime(date_upper_1, "%Y-%m-%d") # Strict API date format
+        except ValueError:
+            os.system("cls" if platform.system() == "Windows" else "clear") # Clear windows terminal content
+            print("Wrong date format! Please try again:")
+            continue
+
+        if date_upper_1 > date_lower_1:
+            break
+        else:
+            print(f"Date unacceptable: {date_upper_1} <= {date_lower_1}")
 
     response = requests.get(DATASET_URL) # API call
 
@@ -59,11 +84,11 @@ while 1:
 
 
         # Setting up the data set base
-        filtered_past_data = [row for row in data if date_lower_0[0] <= row['timestamp'] <= date_upper_0[0]] # Stock date filtration
+        filtered_past_data = [row for row in data if date_lower_0 <= row['timestamp'] <= date_upper_0] # Stock date filtration
         filtered_past_data.reverse() # Reverse alpha vantage api request list (originally returns data from present(or future) to past datetimes)
 
         print(filtered_past_data, end="\n\n")
-        print(f"Filtered {len(filtered_past_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_0[1]} - {date_upper_0[1]}.")
+        print(f"Filtered {len(filtered_past_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_0} - {date_upper_0}.")
 
         # Define x and y axis references
         date_past = [data['timestamp'] for data in filtered_past_data]
@@ -86,11 +111,11 @@ while 1:
 
 
         # Setting up the 'future' data set reference
-        filtered_future_data = [row for row in data if date_lower_1[0] <= row['timestamp'] <= date_upper_1[0]] # Stock date filtration
+        filtered_future_data = [row for row in data if date_lower_1 <= row['timestamp'] <= date_upper_1] # Stock date filtration
         filtered_future_data.reverse() # Reverse alpha vantage api request list (originally returns data from present(or future) to past datetimes)
 
         print(filtered_future_data, end="\n\n")
-        print(f"Filtered {len(filtered_future_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_1[1]} - {date_upper_1[1]}.")
+        print(f"Filtered {len(filtered_future_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_1} - {date_upper_1}.")
         
         date_future = [data['timestamp'] for data in filtered_future_data]
         print("date_future:", date_future)
@@ -122,9 +147,7 @@ while 1:
         while (ans := input("Continue predictions for new dates? (yes/no): ")) not in ["yes", "no"]:
             print("Wrong input: choose between 'yes' and 'no':")
 
-        if ans == "no":
+        if ans == "no": # Exit
             break
-
-        os.system("cls") # Clear windows terminal content
     else: # Call unsuccessful
         print(f'Request failed with status code {response.status_code}')
