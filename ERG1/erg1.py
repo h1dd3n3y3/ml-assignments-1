@@ -94,7 +94,7 @@ while 1:
 
         # Define x and y axis references
         date_past = [data['timestamp'] for data in filtered_past_data]
-        month_past = [int(month[5:7]) for month in date_past]
+        month_past = [int(month[5:7]) for month in date_past] # Save month numeral
 
         # Calculate stock's value using stock's 'high' & 'low' mean
         high_old = [float(data['high']) for data in filtered_past_data]
@@ -113,11 +113,11 @@ while 1:
         print(f"Filtered {len(filtered_future_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_1} - {date_upper_1}.")
         
         date_future = [data['timestamp'] for data in filtered_future_data]
-        month_future = [int(month[5:7]) for month in date_future]
+        month_future = [int(month[5:7]) for month in date_future] # Save month numeral
 
         # Calculate stock's value using stock's 'high' & 'low' mean
-        high_new = [float(data['high']) for data in filtered_past_data]
-        low_new = [float(data['low']) for data in filtered_past_data]
+        high_new = [float(data['high']) for data in filtered_future_data]
+        low_new = [float(data['low']) for data in filtered_future_data]
         stock_value_new = [round(high_new[i] + low_new[i] / 2, 2) for i in range(len(high_new))] # Keep the 2 decimal digits because pstock_value_oldthon is stupid
         print("Real time stock values:", stock_value_new)
 
@@ -128,7 +128,7 @@ while 1:
         print("Predicted stock values:", predicted_stock_values, end="\n\n")
 
         common_months = []
-        for month in month_future:
+        for month in month_future: # Search for common month numeral between prediction and data set
             if month in month_past:
                 common_months.append(month)
 
