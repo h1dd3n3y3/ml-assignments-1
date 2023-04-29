@@ -46,7 +46,7 @@ while 1:
 
     # Desired date limits for future prediction (currently present)
     while 1:
-        date_lower_1 = input("Enter a prediction starting date (in YYYY-MM-DD format): ") # Starting date >= past ending date
+        date_lower_1 = input("Enter a prediction starting date (in YYYY-MM-DD format): ")
 
         try:
             datetime.strptime(date_lower_1, "%Y-%m-%d") # Strict API date format
@@ -55,13 +55,13 @@ while 1:
             print("Wrong date format! Please try again:")
             continue
 
-        if date_lower_1 > date_upper_0:
+        if date_lower_1 > date_upper_0: # Starting date >= past ending date
             break
         else:
             print(f"Date unacceptable: {date_lower_1} <= {date_upper_0}")
 
     while 1:
-        date_upper_1 = input("Enter a prediction ending date (in YYYY-MM-DD format): ") # Ending date <= 1 month before the current program execution month
+        date_upper_1 = input("Enter a prediction ending date (in YYYY-MM-DD format): ")
 
         try:
             datetime.strptime(date_upper_1, "%Y-%m-%d") # Strict API date format
@@ -70,7 +70,7 @@ while 1:
             print("Wrong date format! Please try again:")
             continue
 
-        if date_upper_1 > date_lower_1:
+        if date_upper_1 > date_lower_1: # Ending date > starting date
             break
         else:
             print(f"Date unacceptable: {date_upper_1} <= {date_lower_1}")
