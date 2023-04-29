@@ -41,7 +41,7 @@ date_lower_0 = "2020-01-01" # Starting date
 date_upper_0 = "2021-01-01" # Ending date
 
 while 1:
-    os.system("cls" if platform.system() == "Windows" else "clear") # Clear windows terminal content
+    os.system("cls" if platform.system() == "Windows" else "clear") # Clear terminal content
     print(f"Data set dates: {date_lower_0} - {date_upper_0}")
 
     # Desired date limits for future prediction (currently present)
@@ -51,7 +51,7 @@ while 1:
         try:
             datetime.strptime(date_lower_1, "%Y-%m-%d") # Strict API date format
         except ValueError:
-            os.system("cls" if platform.system() == "Windows" else "clear") # Clear windows terminal content
+            os.system("cls" if platform.system() == "Windows" else "clear") # Clear terminal content
             print("Wrong date format! Please try again:")
             continue
 
@@ -59,6 +59,7 @@ while 1:
             break
         else:
             print(f"Date unacceptable: {date_lower_1} <= {date_upper_0}")
+            os.system("cls" if platform.system() == "Windows" else "clear") # Clear terminal content
 
     while 1:
         date_upper_1 = input("Enter a prediction ending date (in YYYY-MM-DD format): ")
@@ -66,7 +67,7 @@ while 1:
         try:
             datetime.strptime(date_upper_1, "%Y-%m-%d") # Strict API date format
         except ValueError:
-            os.system("cls" if platform.system() == "Windows" else "clear") # Clear windows terminal content
+            os.system("cls" if platform.system() == "Windows" else "clear") # Clear terminal content
             print("Wrong date format! Please try again:")
             continue
 
@@ -74,6 +75,7 @@ while 1:
             break
         else:
             print(f"Date unacceptable: {date_upper_1} <= {date_lower_1}")
+            os.system("cls" if platform.system() == "Windows" else "clear") # Clear terminal content
 
     response = requests.get(DATASET_URL) # API call
 
@@ -92,21 +94,14 @@ while 1:
 
         # Define x and y axis references
         date_past = [data['timestamp'] for data in filtered_past_data]
-        print("date_past:", date_past)
         month_past = [int(month[5:7]) for month in date_past]
-        print("month_past:", month_past)
 
         # Calculate stock's value using stock's 'high' & 'low' mean
         high_old = [float(data['high']) for data in filtered_past_data]
-        print("high_old:", high_old)
         low_old = [float(data['low']) for data in filtered_past_data]
-        print("low_old:", low_old)
         stock_value_old = [round(high_old[i] + low_old[i] / 2, 2) for i in range(len(high_old))] # Keep the 2 decimal digits because pstock_value_oldthon is stupid
-        print("stock_value_old:", stock_value_old)
 
         b = calc_regression_coef(np.array(month_past), np.array(stock_value_old)) # Calculate b_0 & b_1 regression coefficients
-        print("Estimated coefficients:\nb_0 = {}\nb_1 = {}".format(b[0], b[1]), end="\n\n")
-
         plot_regression_line(np.array(month_past), np.array(stock_value_old), b) # Plot regression line
 
 
@@ -118,17 +113,13 @@ while 1:
         print(f"Filtered {len(filtered_future_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_1} - {date_upper_1}.")
         
         date_future = [data['timestamp'] for data in filtered_future_data]
-        print("date_future:", date_future)
         month_future = [int(month[5:7]) for month in date_future]
-        print("month_future:", month_future)
 
         # Calculate stock's value using stock's 'high' & 'low' mean
         high_new = [float(data['high']) for data in filtered_past_data]
-        print("high_new:", high_new)
         low_new = [float(data['low']) for data in filtered_past_data]
-        print("low_new:", low_new)
         stock_value_new = [round(high_new[i] + low_new[i] / 2, 2) for i in range(len(high_new))] # Keep the 2 decimal digits because pstock_value_oldthon is stupid
-        print("stock_value_old:", stock_value_new)
+        print("Real time stock values:", stock_value_new)
 
         predicted_stock_values = []
         for m in range(len(month_future)):
