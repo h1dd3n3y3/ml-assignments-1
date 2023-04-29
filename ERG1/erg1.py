@@ -29,8 +29,8 @@ def plot_regression_line(x, y, b):
     plt.plot(x, y_pred, color="g")
 
     # putting labels
-    plt.xlabel('datestamp')
-    plt.ylabel('stock value')
+    plt.xlabel('Month lapse')
+    plt.ylabel(f'{STOCK_NAME} stock value')
 
     # function to show plot
     plt.show()
@@ -39,11 +39,11 @@ API_KEY = 'AFG1UCT1UGMCYXJ8' # Alpha Vantage API Key
 STOCK_NAME = 'AAPL' # Apple stock name
 DATASET_URL = f'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol={STOCK_NAME}&apikey={API_KEY}&datatype=csv' # Alpha Vantage monthly adjusted url
 
-time_str_lower = '01/03/2022' # Desired starting date
+time_str_lower = '01/03/2021' # Desired starting date
 time_obj_lower = datetime.strptime(time_str_lower, '%d/%m/%Y') # Assign time to datetime object
 time_str_formatted_lower = time_obj_lower.strftime('%Y-%m-%d') # Alpha Vantage timestamp pattern conversion
 
-time_str_upper = '01/10/2022' # Desired ending date
+time_str_upper = '01/03/2023' # Desired ending date
 time_obj_upper = datetime.strptime(time_str_upper, '%d/%m/%Y') # Assign time to datetime object 
 time_str_formatted_upper = time_obj_upper.strftime('%Y-%m-%d') # Alpha Vantage timestamp pattern conversion
 
@@ -68,11 +68,8 @@ if response.status_code == 200: # Call successful
     print(f"Filtered {len(filtered_data)}/{len(data)} total '{STOCK_NAME}' stock data between {time_str_lower} - {time_str_upper}.")
 
     # Define x and y axis references
-    ref_date = datetime(int(time_str_lower[-4:]), 1, 1) # Get the lower date's 1st day of the year as a reference
-
     date = [data['timestamp'] for data in filtered_data]
     print("date:", date)
-
     x = [int(month[5:7]) for month in date]
     print("x:", x)
 
@@ -80,33 +77,12 @@ if response.status_code == 200: # Call successful
     print("high:", high)
     low = [float(data['low']) for data in filtered_data]
     print("low:", low)
-    y = [round(high[i] + low[i] / 2, 2) for i in range(len(high))] # Keep the 2 decimal digits because fuck python
+    y = [round(high[i] + low[i] / 2, 2) for i in range(len(high))] # Keep the 2 decimal digits because python is stupid
     print("y:",y)
 
-    #! optional
-    # Create plot
-    fig, ax = plt.subplots()
-    ax.plot(x, high, label='High')
-    ax.plot(x, low, label='Low')
-
-    #! optional
-    # Set labels and title
-    ax.set_xlabel('Time')
-    ax.set_ylabel(f'{STOCK_NAME} Stock Value')
-    ax.set_title('Stock High and Low Values over Time')
-
-    #! optional
-    plt.xticks(rotation=20) # Rotate x-axis labels for better visibility
-    fig.subplots_adjust(bottom=0.19) # Adjust spacing between subplots to make horizontal axis label visible
-
-    #! optional
-    ax.legend() # Element to define line colours and labels
-    plt.show() # Display the plot
-
-    b = calc_regression_coef(np.array(y), np.array(x))
+    b = calc_regression_coef(np.array(x), np.array(y))
     print("Estimated coefficients:\nb_0 = {}\nb_1 = {}".format(b[0], b[1]))
 
-    # plotting regression line
-    plot_regression_line(np.array(x), np.array(y), b)
+    plot_regression_line(np.array(x), np.array(y), b) # Plot regression line
 else: # Call unsuccessful
     print(f'Request failed with status code {response.status_code}')
