@@ -11,7 +11,7 @@ print(df)
 # Add the unique variable
 for index, row in df.iterrows():
     df.at[index, 'name'] = 'Student ' + str(index)
-#aaaa
+
 # Categorising the students into 4 classes 
 class_Fail = {}
 class_Fair = {}
@@ -83,4 +83,3 @@ print(f"Fail: {class_Fail}")
 print(f"Fair: {class_Fair}")
 print(f"Good: {class_Good}")
 print(f"Excellent: {class_Excellent}")
-
