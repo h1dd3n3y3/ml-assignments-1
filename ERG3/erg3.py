@@ -17,11 +17,11 @@ class_Fail = {}
 class_Fair = {}
 class_Good = {}
 class_Excellent = {}
-
+#Adding a 'name' key for better data reading and setting the data take from math score
 for index, row in df.iterrows():
     name = row['name']
     math_score = row['math score']
-
+    #Classification of the dataset per score
     if (math_score < 50):
         class_Fail[name] = math_score
     elif (math_score == 50) | (math_score < 65):
@@ -62,7 +62,7 @@ for name, score in class_Excellent.items():
     predicted_score = clf.predict([[score]])[0]
     predictions[name] = predicted_score
 
-# Print the predictions for each student
+# Print the predictions for each student and classification by result
 for name, predicted_score in predictions.items():
     if (predicted_score < 50):
         predicted_class="Fail"
