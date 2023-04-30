@@ -79,20 +79,20 @@ def safe_csv_read(csvstring):            #from python docs: https://docs.python.
 def eucledian_distance(point1,point2):     # Υπάρχει νομίζω μια συνάρτηση στην numpy αλλά έτσι βολεύομαι περισσότερο.
     return np.sqrt(np.sum(np.square(point1 - point2)))
 
-def split_data(data,cluster_centers,labels):
+def split_data(data,cluster_centers,labels):    # Με αυτή την συνάρτηση σπάμε τα δεδομένα από το κύριο pool σε μικρότερα pools ανάλογα σε ποιά συστάδα είναι
     output=[]
-    for j in range(0, cluster_centers.shape[0]):
+    for j in range(0, cluster_centers.shape[0]):    # Αρχικοποιούμε την ενδιάμεση λίστα για να έχουμε θέσεις όσες και ο αριθμός των συστάδων
         output.append([])
     k=0
-    for i in data:
+    for i in data:                                  # Βάζουμε τα δεδομένα με βάση τον αριθμό συστάδας από την labels
         output[labels[k]].append(i)
         k=k+1
     return output
 
 def get_cluster_radii(cluster_centers,labels,subset):
-    output=np.zeros(cluster_centers.shape[0])
-    distances=np.zeros((cluster_centers.shape[0],subset.shape[0]))
-    spdat=split_data(subset, cluster_centers, labels)
+    output=np.zeros(cluster_centers.shape[0])               # Αρχηκοποίηση των λιστών. Η έξοδος θα είναι μεγέθους όσων είναι και οι συστάδες
+    distances=np.zeros((cluster_centers.shape[0],subset.shape[0]))  # συστάδα επί πλήθος δεδομένων της
+    spdat=split_data(subset, cluster_centers, labels)       #Κάνουμε το split
     spdatlen=[]
 
     for k in range(0,cluster_centers.shape[0]):
@@ -102,7 +102,7 @@ def get_cluster_radii(cluster_centers,labels,subset):
         spdatlen.append(j)
     for i in range (0,cluster_centers.shape[0]):
         for j in range(0,spdatlen[i]):
-            distances[i][j]=eucledian_distance(spdat[i][j],  cluster_centers[i])
+            distances[i][j]=eucledian_distance(spdat[i][j],  cluster_centers[i])    #Έτσι βρίσκουμε όλες τις αποστάσεις από το κάθε σημείο με το κάθε κέντρο στην συστάδα
     for i in labels:
         output[i]=np.amax(distances[i])
     return output
