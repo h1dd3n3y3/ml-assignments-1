@@ -36,17 +36,17 @@ API_KEY = 'AFG1UCT1UGMCYXJ8' # Alpha Vantage API Key
 STOCK_NAME = 'AAPL' # Apple stock name
 DATASET_URL = f'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol={STOCK_NAME}&apikey={API_KEY}&datatype=csv' # Alpha Vantage monthly adjusted url
 
-# Desired date limits for the data set (old data)
+# Desired date limits for the dataset (old data)
 date_lower_0 = "2020-01-01" # Starting date
 date_upper_0 = "2021-01-01" # Ending date
 
 while 1:
     os.system("cls" if platform.system() == "Windows" else "clear") # Clear terminal content
-    print(f"Data set dates: {date_lower_0} - {date_upper_0}")
+    print(f"Dataset dates: {date_lower_0} - {date_upper_0}")
 
     # Desired date limits for future prediction (currently present)
     while 1:
-        date_lower_1 = input("Enter a prediction starting date (in YYYY-MM-DD format): ")
+        date_lower_1 = input(f"Enter a prediction starting date > '{date_upper_0}' (in YYYY-MM-DD format): ")
 
         try:
             datetime.strptime(date_lower_1, "%Y-%m-%d") # Strict API date format
@@ -62,7 +62,7 @@ while 1:
             os.system("cls" if platform.system() == "Windows" else "clear") # Clear terminal content
 
     while 1:
-        date_upper_1 = input("Enter a prediction ending date (in YYYY-MM-DD format): ")
+        date_upper_1 = input(f"Enter a prediction ending date > '{date_lower_1}' (in YYYY-MM-DD format): ")
 
         try:
             datetime.strptime(date_upper_1, "%Y-%m-%d") # Strict API date format
@@ -85,12 +85,12 @@ while 1:
         data = [row for row in reader] # Save all stock data in a list
 
 
-        # Setting up the data set base
+        # Setting up the dataset base
         filtered_past_data = [row for row in data if date_lower_0 <= row['timestamp'] <= date_upper_0] # Stock date filtration
         filtered_past_data.reverse() # Reverse alpha vantage api request list (originally returns data from present(or future) to past datetimes)
 
+        print(f"\n\nFiltered {len(filtered_past_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_0} - {date_upper_0}.", end="\n\n")
         print(filtered_past_data, end="\n\n")
-        print(f"Filtered {len(filtered_past_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_0} - {date_upper_0}.")
 
         # Define x and y axis references
         date_past = [data['timestamp'] for data in filtered_past_data]
@@ -105,12 +105,12 @@ while 1:
         plot_regression_line(np.array(month_past), np.array(stock_value_old), b) # Plot regression line
 
 
-        # Setting up the 'future' data set reference
+        # Setting up the 'future' dataset reference
         filtered_future_data = [row for row in data if date_lower_1 <= row['timestamp'] <= date_upper_1] # Stock date filtration
         filtered_future_data.reverse() # Reverse alpha vantage api request list (originally returns data from present(or future) to past datetimes)
 
+        print(f"\nFiltered {len(filtered_future_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_1} - {date_upper_1}:", end="\n\n")
         print(filtered_future_data, end="\n\n")
-        print(f"Filtered {len(filtered_future_data)}/{len(data)} total '{STOCK_NAME}' stock data between {date_lower_1} - {date_upper_1}.")
         
         date_future = [data['timestamp'] for data in filtered_future_data]
         month_future = [int(month[5:7]) for month in date_future] # Save month numeral
@@ -119,21 +119,21 @@ while 1:
         high_new = [float(data['high']) for data in filtered_future_data]
         low_new = [float(data['low']) for data in filtered_future_data]
         stock_value_new = [round(high_new[i] + low_new[i] / 2, 2) for i in range(len(high_new))] # Keep the 2 decimal digits because pstock_value_oldthon is stupid
-        print("Real time stock values:", stock_value_new)
+        print("\nReal time stock values:", stock_value_new)
 
         predicted_stock_values = []
         for m in range(len(month_future)):
             predicted_stock_values.append(stock_prediction_formula(b[0], b[1], m)) # Predict stock values
 
-        print("Predicted stock values:", predicted_stock_values, end="\n\n")
+        print("Predicted stock values:", predicted_stock_values, end="\n\n\n")
 
         common_months = []
-        for month in month_future: # Search for common month numeral between prediction and data set
+        for month in month_future: # Search for common month numeral between prediction and dataset
             if month in month_past:
                 common_months.append(month)
 
         for j in common_months: # Print error between real and predicted stock value
-            print(f'Prediction error for {date_future[common_months.index(j)]}: {round(abs(stock_value_old[month_past.index(j)] - predicted_stock_values[month_future.index(j)]), 2)}') # 2 decimal digit limitation
+            print(f'Prediction error for {date_future[common_months.index(j)]}: |{stock_value_new[common_months.index(j)]} - {predicted_stock_values[common_months.index(j)]}| = {round(abs(stock_value_new[common_months.index(j)] - predicted_stock_values[common_months.index(j)]), 2)}') # 2 decimal digit limitation
         
         while (ans := input("Continue predictions for new dates? (yes/no): ")) not in ["yes", "no"]:
             print("Wrong input: choose between 'yes' and 'no':")
