@@ -33,12 +33,12 @@ for index, row in df.iterrows():
     else:
         print ("error math score value out of bounds")
 
-#Make dataframe with the next math score for each student
+# Make dataframe with the next math score for each student
 next_math_score = df[['name', 'math score']].copy()
 next_math_score['next math score'] = next_math_score['math score'].shift(-1)
 next_math_score = next_math_score.dropna()
 
-#Train the decision tree classifier to predict the next mark
+# Train the decision tree classifier to predict the next mark
 X = next_math_score[['math score']]
 Y = next_math_score['next math score']
 clf = DecisionTreeClassifier()
