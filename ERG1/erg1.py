@@ -155,7 +155,7 @@ while 1:
         # Calculate stock's value using stock's 'high' & 'low' mean
         high_new = [float(data['high']) for data in filtered_future_data]
         low_new = [float(data['low']) for data in filtered_future_data]
-        stock_value_new = [round(high_new[i] + low_new[i] / 2, 2) for i in range(len(high_new))] # Keep the 2 decimal digits because pstock_value_oldthon is stupid
+        stock_value_new = [round(high_new[i] + low_new[i] / 2, 2) for i in range(len(high_new))] # Keep the 2 decimal digits because python is stupid
         print("\nReal time stock values:", stock_value_new)
 
         predicted_stock_values = []
@@ -170,7 +170,8 @@ while 1:
                 common_months.append(month)
 
         for j in common_months: # Print error between real and predicted stock value
-            print(f'Prediction error for {date_future[common_months.index(j)]}: |{stock_value_new[common_months.index(j)]} - {predicted_stock_values[common_months.index(j)]}| = {round(abs(stock_value_new[common_months.index(j)] - predicted_stock_values[common_months.index(j)]), 2)}') # 2 decimal digit limitation
+            print(f'Prediction error for {date_future[common_months.index(j)]}: |{stock_value_new[common_months.index(j)]} - {predicted_stock_values[common_months.index(j)]}| = \
+{round(abs(stock_value_new[common_months.index(j)] - predicted_stock_values[common_months.index(j)]), 2)}') # 2 decimal digit limitation
         
         while (ans := input("Continue predictions for new dates? (yes/no): ")) not in ["yes", "no"]:
             print("Wrong input: choose between 'yes' and 'no':")
