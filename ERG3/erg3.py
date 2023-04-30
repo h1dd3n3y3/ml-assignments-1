@@ -8,10 +8,10 @@ df = pd.read_csv('exams.csv')
 print("Original dataset:")
 print(df)
 
-# Προσθέτουμε τη μοναδική μεταβλητή
+# Add the unique variable
 for index, row in df.iterrows():
     df.at[index, 'name'] = 'Student ' + str(index)
-#aaaa
+
 # Categorising the students into 4 classes 
 class_Fail = {}
 class_Fair = {}
@@ -24,21 +24,21 @@ for index, row in df.iterrows():
 
     if (math_score < 50):
         class_Fail[name] = math_score
-    elif (math_score == 50) | (math_score <65):
+    elif (math_score == 50) | (math_score < 65):
         class_Fair[name] = math_score
-    elif (math_score == 65) | (math_score <85):
+    elif (math_score == 65) | (math_score < 85):
         class_Good[name] = math_score
-    elif (math_score ==85) | (math_score <=100):
+    elif (math_score == 85) | (math_score <= 100):
         class_Excellent[name] = math_score
     else:
         print ("error math score value out of bounds")
 
-#Make dataframe with the next math score for each student
+# Make dataframe with the next math score for each student
 next_math_score = df[['name', 'math score']].copy()
 next_math_score['next math score'] = next_math_score['math score'].shift(-1)
 next_math_score = next_math_score.dropna()
 
-#Train the decision tree classifier to predict the next mark
+# Train the decision tree classifier to predict the next mark
 X = next_math_score[['math score']]
 Y = next_math_score['next math score']
 clf = DecisionTreeClassifier()
@@ -66,11 +66,11 @@ for name, score in class_Excellent.items():
 for name, predicted_score in predictions.items():
     if (predicted_score < 50):
         predicted_class="Fail"
-    elif (predicted_score == 50) | (predicted_score <65):
+    elif (predicted_score == 50) | (predicted_score < 65):
         predicted_class="Fair"
-    elif (predicted_score == 65) | (predicted_score <85):
+    elif (predicted_score == 65) | (predicted_score < 85):
         predicted_class="Good"
-    elif (predicted_score ==85) | (predicted_score <=100):
+    elif (predicted_score == 85) | (predicted_score <= 100):
         predicted_class="Excellent"
     else:
         print ("error math score value out of bounds")
@@ -83,4 +83,3 @@ print(f"Fail: {class_Fail}")
 print(f"Fair: {class_Fair}")
 print(f"Good: {class_Good}")
 print(f"Excellent: {class_Excellent}")
-
