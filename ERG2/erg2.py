@@ -1,3 +1,61 @@
+# Παράδειγμα εξόδου μετά εκτέλεσης
+"""
+
+Traveler Age/Travel Duration
+The centroids of the 2 clusters are:
+[42.69230769  7.30769231] [29.3877551  7.7244898]
+The radii are:
+17.310427134359358 9.39179704467928
+And the clusters have 39 and 98 data points out of the 137 total points respectively
+
+----------------------------------------------------------------------------------------
+
+From cluster 1:
+
+Accomodation Cost/Travel Duration
+The centroids of the 2 clusters are:
+[1139.18918919    7.32432432] [5500.    7.]
+The radii are:
+1860.811565290628 1500.0
+And the clusters have 37 and 2 data points out of the 39 total points respectively
+
+----------------------------------------------------------------------------------------
+
+From cluster 1:
+
+Transportation Cost/Travel Duration
+The centroids of the 2 clusters are:
+[1733.33333333    7.83333333] [503.78787879   7.21212121]
+The radii are:
+1860.811565290628 1500.0
+And the clusters have 6 and 33 data points out of the 39 total points respectively
+
+----------------------------------------------------------------------------------------
+
+From cluster 2:
+
+Accomodation Cost/Traveler Age
+The centroids of the 2 clusters are:
+[874.23913043  29.40217391] [6166.66666667   29.16666667]
+The radii are:
+2125.7609076089725 1833.3346136359164
+And the clusters have 92 and 6 data points out of the 98 total points respectively
+
+----------------------------------------------------------------------------------------
+
+From cluster 2:
+
+Transfer Cost/Traveler Age
+The centroids of the 2 clusters are:
+[514.19354839  29.38709677] [2700.    29.4]
+The radii are:
+985.8093417454683 300.00426663632635
+And the clusters have 93 and 5 data points out of the 98 total points respectively
+
+----------------------------------------------------------------------------------------
+"""
+# Τα αποτελέσματα μπορεί να είναι διαφορετικά κάθε φορά λόγω των τυχαίων σημείων που επιλέγει ο kmeans
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
