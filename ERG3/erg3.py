@@ -8,7 +8,7 @@ df = pd.read_csv('exams.csv')
 print("Original dataset:")
 print(df)
 
-# Προσθέτουμε τη μοναδική μεταβλητή
+# Add the unique variable
 for index, row in df.iterrows():
     df.at[index, 'name'] = 'Student ' + str(index)
 #aaaa
