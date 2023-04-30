@@ -24,11 +24,11 @@ for index, row in df.iterrows():
 
     if (math_score < 50):
         class_Fail[name] = math_score
-    elif (math_score == 50) | (math_score <65):
+    elif (math_score == 50) | (math_score < 65):
         class_Fair[name] = math_score
-    elif (math_score == 65) | (math_score <85):
+    elif (math_score == 65) | (math_score < 85):
         class_Good[name] = math_score
-    elif (math_score ==85) | (math_score <=100):
+    elif (math_score == 85) | (math_score <= 100):
         class_Excellent[name] = math_score
     else:
         print ("error math score value out of bounds")
@@ -66,11 +66,11 @@ for name, score in class_Excellent.items():
 for name, predicted_score in predictions.items():
     if (predicted_score < 50):
         predicted_class="Fail"
-    elif (predicted_score == 50) | (predicted_score <65):
+    elif (predicted_score == 50) | (predicted_score < 65):
         predicted_class="Fair"
-    elif (predicted_score == 65) | (predicted_score <85):
+    elif (predicted_score == 65) | (predicted_score < 85):
         predicted_class="Good"
-    elif (predicted_score ==85) | (predicted_score <=100):
+    elif (predicted_score == 85) | (predicted_score <= 100):
         predicted_class="Excellent"
     else:
         print ("error math score value out of bounds")
