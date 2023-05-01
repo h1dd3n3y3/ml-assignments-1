@@ -8,9 +8,9 @@
 Ομάδα Θεμάτων: 2η
 
 Συνεισφορά Μελών Ομάδας: Ερώτημα Α -> Δαυίδ Παναγιώτης Παραθυράς, Ερώτημα Β -> Δημοσθένης Κράλλης, Ερώτημα Γ -> Δημήτρης Κόκκαλης.
-1ο Μέλος: Δαυίδ Παναγιώτης Παραθυράς
-2ο Μέλος: Δημοσθένης Κράλλης
-3ο Μέλος: Δημήτρης Κόκκαλης
+1ο Μέλος: Δαυίδ Παναγιώτης Παραθυράς, ΑΜ: 2119200
+2ο Μέλος: Δημοσθένης Κράλλης, ΑΜ: 2120231
+3ο Μέλος: Δημήτρης Κόκκαλης, ΑΜ: 2120273
 ------------
 Ερώτημα Α.
 Σύντομη Περιγραφή:  Πρόβλεψη τιμών μετοχής με μέθοδο γραμμικής παλινδρόμηση:
@@ -568,13 +568,103 @@ plt.show()
 
 ------------
 Ερώτημα Γ.
-Σύντομη Περιγραφή: ΧΧ
-Dataset: <θα δηλώσετε το dataset που χρησιμοποιήσατε – εφόσον χρησιμοποιήσατε – και το σύνδεσμο προς
-αυτό>
+Σύντομη Περιγραφή: 
+    Ειναι ενας κωδικας, που δεχεται ενα dataset και το επεξεργαζεται και αποδιδει προβλεψεις βαση αναλογου δεντρου.
+    
+    Ο κωδικας ξεκινα φορτωνοντας την της βιβλιοθηκες pantas & sklearn. Μετα αποδιδει μοναδικο κλειδι 
+    αναφερομενο ως name μεσα στο dataset και αναγνωριζουμε την θεση του math score μεσα στο dataset ως math_score.
+
+    Επειτα αναθετει τις τιμες του dataset σε κλασεις-Βιβλιοθηκες και ετοιμαζει μια νεα κλαση την next math score για την προ-
+    ετοιμασια του Δεντρου sklearn με την εντολη clf.
+
+    Παρακατω τρεχει τα predictions μεσα απο καθε κλαση και τα επαναοργανωνει στις αντιστοιχες κλασεις.
+    Εν τελει δινει τα αποτελεσματα και τις κλασεις.
+Dataset: https://www.kaggle.com/datasets/spscientist/students-performance-in-exams?select=StudentsPerformance.csv (έχει μετονομαστεί σε exams.csv)
 Κώδικας:
-.
-.
-.
-.
-.
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+
+# Load the dataset into a pandas dataframe
+df = pd.read_csv('exams.csv')
+
+# Print the original dataset
+print("Original dataset:")
+print(df)
+
+# Add the unique variable
+for index, row in df.iterrows():
+    df.at[index, 'name'] = 'Student ' + str(index)
+
+# Categorising the students into 4 classes 
+class_Fail = {}
+class_Fair = {}
+class_Good = {}
+class_Excellent = {}
+#Adding a 'name' key for better data reading and setting the data take from math score
+for index, row in df.iterrows():
+    name = row['name']
+    math_score = row['math score']
+    #Classification of the dataset per score
+    if (math_score < 50):
+        class_Fail[name] = math_score
+    elif (math_score == 50) | (math_score < 65):
+        class_Fair[name] = math_score
+    elif (math_score == 65) | (math_score < 85):
+        class_Good[name] = math_score
+    elif (math_score == 85) | (math_score <= 100):
+        class_Excellent[name] = math_score
+    else:
+        print ("error math score value out of bounds")
+
+# Make dataframe with the next math score for each student
+next_math_score = df[['name', 'math score']].copy()
+next_math_score['next math score'] = next_math_score['math score'].shift(-1)
+next_math_score = next_math_score.dropna()
+
+# Train the decision tree classifier to predict the next mark
+X = next_math_score[['math score']]
+Y = next_math_score['next math score']
+clf = DecisionTreeClassifier()
+clf.fit(X,Y)
+
+# Predict the next math score for each student
+predictions = {}
+for name, score in class_Fail.items():
+    predicted_score = clf.predict([[score]])[0]
+    predictions[name] = predicted_score
+
+for name, score in class_Fair.items():
+    predicted_score = clf.predict([[score]])[0]
+    predictions[name] = predicted_score
+
+for name, score in class_Good.items():
+    predicted_score = clf.predict([[score]])[0]
+    predictions[name] = predicted_score
+
+for name, score in class_Excellent.items():
+    predicted_score = clf.predict([[score]])[0]
+    predictions[name] = predicted_score
+
+# Print the predictions for each student and classification by result
+for name, predicted_score in predictions.items():
+    if (predicted_score < 50):
+        predicted_class="Fail"
+    elif (predicted_score == 50) | (predicted_score < 65):
+        predicted_class="Fair"
+    elif (predicted_score == 65) | (predicted_score < 85):
+        predicted_class="Good"
+    elif (predicted_score == 85) | (predicted_score <= 100):
+        predicted_class="Excellent"
+    else:
+        print ("error math score value out of bounds")
+    print(f"{name}: Predicted next math score is {predicted_class}")
+    
+
+# Print the values for each class
+print("Values for each class:")
+print(f"Fail: {class_Fail}")
+print(f"Fair: {class_Fair}")
+print(f"Good: {class_Good}")
+print(f"Excellent: {class_Excellent}")
+
 --------------------------------------------- Τέλος περιεχομένων του αρχείου txt -----------------------------------------------------
